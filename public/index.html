@@ -5,11 +5,84 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso denegado</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+
+    <title>Sign In</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h1>acceso denegado</h1>
+    <h1>Google Sign In</h1>
+
+    <div id="g_id_onload" data-client_id="837193687451-esbdhg220rfjt497caf5jfkum4km7da7.apps.googleusercontent.com"
+        data-auto_prompt="false" data-callback="handleCredentialResponse">
+    </div>
+    <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with"
+        data-shape="rectangular" data-logo_alignment="left">
+    </div>
+
+    <!-- <button id="google_signout">
+        Sign out
+    </button> -->
+
+    <div id="gSignOutWrapper">
+        <!-- <span class="label">Sign Out</span> -->
+        <div id="google_signout">
+            <!-- <span class="icon"></span> -->
+            <span class="buttonText">Google logout</span>
+        </div>
+    </div>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <script>
+        function handleCredentialResponse(response) {
+            // decodeJwtResponse() is a custom function defined by you
+            // to decode the credential response.
+            /* const responsePayload = decodeJwtResponse(response.credential);
+       
+            console.log("ID: " + responsePayload.sub);
+            console.log('Full Name: ' + responsePayload.name);
+            console.log('Given Name: ' + responsePayload.given_name);
+            console.log('Family Name: ' + responsePayload.family_name);
+            console.log("Image URL: " + responsePayload.picture);
+            console.log("Email: " + responsePayload.email); */
+
+            // googleToken = response.credential;
+            // console.log(googleToken)
+
+            const body = { id_token: response.credential };
+            fetch('http://localhost:3000/api/auth/google-auth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            })
+                .then(resp => resp.json())
+                .then(resp => {
+                    localStorage.setItem('email', resp.user.email)
+                })
+                .catch(console.warn);
+        }
+
+        const button = document.getElementById('google_signout');
+        button.onclick = () => {
+            google.accounts.id.disableAutoSelect();
+            google.accounts.id.revoke(localStorage.getItem('email'), done => {
+                localStorage.clear();
+                location.reload();
+            })
+        }
+    </script>
+
 </body>
 
 </html>
