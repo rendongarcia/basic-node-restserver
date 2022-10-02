@@ -1,7 +1,7 @@
 
-const validatePassword = (password = '', update = false) => {
+const validatePassword = (password = '', updatePass = false) => {
 
-    if (update && password === '') {
+    if (updatePass && password === '') {
         return true;
     }
 
