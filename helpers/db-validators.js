@@ -1,5 +1,6 @@
-const Role = require('../models/role');
-const User = require('../models/user');
+const { Role, User, Category, Product } = require('../models');
+
+/* Role validations */
 
 const isValidUpdateRole = async (role = '') => {
     if (role !== '') {
@@ -17,6 +18,7 @@ const isValidRole = async (role = '') => {
     }
 }
 
+/* User validations */
 const emailExists = async (email = '') => {
     const existsDB = await User.findOne({ email });
     if (existsDB) {
@@ -31,6 +33,29 @@ const userExistsById = async (id = '') => {
     }
 }
 
+/* Category validations */
+const categoryExistsById = async (id = '') => {
+    const existsDB = await Category.findById(id);
+    if (!existsDB) {
+        throw new Error(`Category id doesn't exist`);
+    }
+}
+
+const categoryExistsByName = async (name = '') => {
+    const existsDB = await Category.findOne({ name: name.toUpperCase() });
+    if (!existsDB) {
+        throw new Error(`Category '${name}' doesn't exist`);
+    }
+}
+
+/* Product validations */
+const productExistsById = async (id = '') => {
+    const existsDB = await Product.findById(id);
+    if (!existsDB) {
+        throw new Error(`Product id doesn't exist`);
+    }
+}
+
 module.exports = {
-    isValidRole, emailExists, userExistsById, isValidUpdateRole
+    isValidRole, emailExists, userExistsById, isValidUpdateRole, categoryExistsById, productExistsById, categoryExistsByName
 }

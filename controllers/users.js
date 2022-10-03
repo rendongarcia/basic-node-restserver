@@ -1,9 +1,9 @@
 const { response } = require('express');
 const bcryptjs = require('bcryptjs');
-const User = require('../models/user');
+const { User } = require('../models');
 
 
-const usersGet = async (req, res = response) => {
+const listUsers = async (req, res = response) => {
     const { limit = 5, from = 0 } = req.query;
     const qry = { state: true };
 
@@ -19,7 +19,7 @@ const usersGet = async (req, res = response) => {
     });
 }
 
-const userGet = async (req, res = response) => {
+const getUser = async (req, res = response) => {
 
     const { id } = req.params;
     const userDB = await User.findById(id);
@@ -30,7 +30,7 @@ const userGet = async (req, res = response) => {
 
 }
 
-const userPost = async (req, res = response) => {
+const createUser = async (req, res = response) => {
 
     const { name, password, email, role } = req.body;
 
@@ -51,7 +51,7 @@ const userPost = async (req, res = response) => {
     });
 }
 
-const userPut = async (req, res = response) => {
+const updateUser = async (req, res = response) => {
     const { id } = req.params;
     const { _id, password, google_auth, email, ...theUser } = req.body;
 
@@ -69,21 +69,21 @@ const userPut = async (req, res = response) => {
     });
 }
 
-const userDelete = async (req, res = response) => {
+const deleteUser = async (req, res = response) => {
     const { id } = req.params;
 
     const userDB = await User.findByIdAndUpdate(id, { state: false }, { new: true })
 
-    res.json({
+    res.status(202).json({
         msg: 'deleted user',
         userDB
     });
 }
 
 module.exports = {
-    usersGet
-    , userGet
-    , userPost
-    , userPut
-    , userDelete
+    listUsers
+    , getUser
+    , createUser
+    , updateUser
+    , deleteUser
 }
