@@ -56,6 +56,14 @@ const productExistsById = async (id = '') => {
     }
 }
 
+/* Files validations */
+const checkAllowedCollections = (collection = '', collections = []) => {
+    if (!collections.includes(collection)) {
+        throw new Error(`Collection ${collection} is not allowed. Options: ${collections}`)
+    }
+    return true;
+}
+
 module.exports = {
-    isValidRole, emailExists, userExistsById, isValidUpdateRole, categoryExistsById, productExistsById, categoryExistsByName
+    isValidRole, emailExists, userExistsById, isValidUpdateRole, categoryExistsById, productExistsById, categoryExistsByName, checkAllowedCollections
 }
